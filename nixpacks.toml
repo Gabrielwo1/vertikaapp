@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "nodePackages.pnpm"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = [
+  "pnpm --filter @virtualtour/api exec prisma generate",
+  "pnpm --filter @virtualtour/api build"
+]
+
+[start]
+cmd = "pnpm --filter @virtualtour/api exec prisma migrate deploy && node packages/api/dist/index.js"
