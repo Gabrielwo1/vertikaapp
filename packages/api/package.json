@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "prisma generate && tsc",
+    "build": "prisma generate && tsc && tsc-alias",
     "start": "node dist/index.js",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
@@ -33,6 +33,7 @@
     "@types/node": "^22.7.5",
     "@types/web-push": "^3.6.3",
     "tsx": "^4.19.1",
+    "tsc-alias": "^1.8.10",
     "vitest": "^2.1.2"
   }
 }
