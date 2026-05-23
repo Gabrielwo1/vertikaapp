@@ -3,11 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "moduleResolution": "node16",
-    "module": "node16",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true
   },
   "include": ["src/**/*.ts"]
 }
