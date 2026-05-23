@@ -9,17 +9,17 @@ import { VIBRATE_DURATION_MS } from '@/constants';
 
 type CapturePhase = 'instruction' | 'recording' | 'done';
 
-const SPEED_MESSAGES = {
-  slow: 'Mais devagar ⬇',
-  perfect: 'Perfeito! ✓',
-  fast: 'Pode acelerar um pouco ⬆',
-} as const;
+function getSpeedMessage(speed: 'slow' | 'perfect' | 'fast'): string {
+  if (speed === 'perfect') return 'Perfeito! ✓';
+  if (speed === 'fast') return 'Pode acelerar um pouco ⬆';
+  return 'Mais devagar ⬇';
+}
 
-const SPEED_COLORS = {
-  slow: '#3b82f6',
-  perfect: '#10b981',
-  fast: '#f59e0b',
-} as const;
+function getSpeedColor(speed: 'slow' | 'perfect' | 'fast'): string {
+  if (speed === 'perfect') return '#10b981';
+  if (speed === 'fast') return '#f59e0b';
+  return '#3b82f6';
+}
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -335,12 +335,12 @@ export default function Capture(): React.ReactElement {
           >
             <span
               style={{
-                color: SPEED_COLORS[gyro.speed],
+                color: getSpeedColor(gyro.speed),
                 fontSize: '0.875rem',
                 fontWeight: 600,
               }}
             >
-              {SPEED_MESSAGES[gyro.speed]}
+              {getSpeedMessage(gyro.speed)}
             </span>
           </div>
 

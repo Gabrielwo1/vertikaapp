@@ -50,9 +50,13 @@ export async function subscribeToPush(applicationServerKey: string): Promise<Pus
 
   const registration = await navigator.serviceWorker.ready;
 
+  const keyBytes = urlBase64ToUint8Array(applicationServerKey);
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+    applicationServerKey: keyBytes.buffer.slice(
+      keyBytes.byteOffset,
+      keyBytes.byteOffset + keyBytes.byteLength,
+    ) as ArrayBuffer,
   });
 
   return subscription;
