@@ -1,0 +1,12 @@
+{
+  "name": "virtualtour",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' --filter './packages/api' dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  },
+  "workspaces": ["apps/*", "packages/*"]
+}

@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Imobiliaria {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  plan      Plan     @default(FREE)
+  tours     Tour[]
+  createdAt DateTime @default(now())
+}
+
+model Tour {
+  id            String      @id @default(cuid())
+  imobiliariaId String
+  imobiliaria   Imobiliaria @relation(fields: [imobiliariaId], references: [id])
+  address       String
+  price         Decimal?
+  status        TourStatus  @default(DRAFT)
+  rooms         Room[]
+  settingsJson  Json?
+  publishedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Room {
+  id        String     @id @default(cuid())
+  tourId    String
+  tour      Tour       @relation(fields: [tourId], references: [id])
+  name      String
+  order     Int
+  status    RoomStatus @default(PENDING)
+  videoPath String?
+  splatPath String?
+  thumbPath String?
+  voxelPath String?
+  jobId     String?
+  createdAt DateTime   @default(now())
+}
+
+enum TourStatus {
+  DRAFT
+  UPLOADING
+  PROCESSING
+  READY
+  PUBLISHED
+  ARCHIVED
+}
+
+enum RoomStatus {
+  PENDING
+  UPLOADING
+  PROCESSING
+  DONE
+  ERROR
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
