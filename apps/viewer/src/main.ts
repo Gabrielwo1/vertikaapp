@@ -29,20 +29,20 @@ function buildViewerParams(): ViewerParams | null {
     return null;
   }
 
-  const settingsUrl = searchParams.get("settings") ?? undefined;
-  const contentUrl = searchParams.get("content") ?? undefined;
-  const collisionUrl = searchParams.get("collision") ?? undefined;
-  const posterUrl = searchParams.get("poster") ?? undefined;
   const isPreview = searchParams.get("preview") === "1";
+  const params: ViewerParams = { tourId, isPreview };
 
-  return {
-    tourId,
-    settingsUrl,
-    contentUrl,
-    collisionUrl,
-    posterUrl,
-    isPreview,
-  };
+  const settingsUrl = searchParams.get("settings");
+  const contentUrl = searchParams.get("content");
+  const collisionUrl = searchParams.get("collision");
+  const posterUrl = searchParams.get("poster");
+
+  if (settingsUrl !== null) params.settingsUrl = settingsUrl;
+  if (contentUrl !== null) params.contentUrl = contentUrl;
+  if (collisionUrl !== null) params.collisionUrl = collisionUrl;
+  if (posterUrl !== null) params.posterUrl = posterUrl;
+
+  return params;
 }
 
 // ---------------------------------------------------------------------------
