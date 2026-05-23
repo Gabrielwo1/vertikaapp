@@ -1,7 +1,11 @@
 import type { FastifyPluginAsync } from "fastify";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { runpodWebhookSchema } from "@virtualtour/shared";
-import { getSubscriptions, sendPushNotification } from "@/services/push";
+import {
+  getSubscriptions,
+  sendPushNotification,
+  type PushSubscriptionData,
+} from "@/services/push";
 
 /**
  * Verifies the HMAC-SHA256 signature from RunPod webhook header.
@@ -140,7 +144,7 @@ const webhooksRoutes: FastifyPluginAsync = async (fastify) => {
                 "https://viewer.virtualtour.com.br";
 
               await Promise.allSettled(
-                subscriptions.map((subscription) =>
+                subscriptions.map((subscription: PushSubscriptionData) =>
                   sendPushNotification(subscription, {
                     title: "Tour pronto!",
                     body: `Seu tour está pronto para visualização e publicação.`,
