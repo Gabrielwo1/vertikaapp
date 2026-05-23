@@ -1,0 +1,6 @@
+torch
+torchvision
+gsplat==1.5.3
+supabase>=2.0.0
+ffmpeg-python
+requests

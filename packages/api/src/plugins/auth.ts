@@ -7,14 +7,18 @@ export interface AuthTokenPayload {
   name: string;
 }
 
+// Extend @fastify/jwt's TokenOrPayload type via declaration merging on FastifyRequest.
+// @fastify/jwt declares `user` as `string | object | Buffer`, so we widen our
+// accessor to use a separate decorated property to avoid the conflict.
 declare module "fastify" {
   interface FastifyRequest {
-    user: AuthTokenPayload;
+    // authenticated user payload attached after JWT verification
+    authUser: AuthTokenPayload;
   }
 }
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
-  fastify.decorateRequest("user", null);
+  fastify.decorateRequest("authUser", null);
 };
 
 export async function authenticate(
@@ -23,8 +27,8 @@ export async function authenticate(
 ): Promise<void> {
   try {
     const payload = await request.jwtVerify<AuthTokenPayload>();
-    request.user = payload;
-  } catch (err) {
+    request.authUser = payload;
+  } catch (_err) {
     reply.code(401).send({
       success: false,
       message: "Não autorizado. Token inválido ou expirado.",

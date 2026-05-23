@@ -189,7 +189,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     { preHandler: [authenticate] },
     async (request, reply) => {
       const imobiliaria = await fastify.prisma.imobiliaria.findUnique({
-        where: { id: request.user.imobiliariaId },
+        where: { id: request.authUser.imobiliariaId },
       });
 
       if (!imobiliaria) {

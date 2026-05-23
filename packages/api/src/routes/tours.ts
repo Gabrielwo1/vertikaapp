@@ -1,4 +1,5 @@
 import type { FastifyPluginAsync } from "fastify";
+import { Prisma } from "@prisma/client";
 import { authenticate } from "@/plugins/auth";
 import {
   createTourSchema,
@@ -20,7 +21,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const tours = await fastify.prisma.tour.findMany({
         where: {
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
           status: { not: "ARCHIVED" },
         },
         include: {
@@ -50,7 +51,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
 
       const tour = await fastify.prisma.tour.create({
         data: {
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
           address: body.address,
           price: body.price != null ? body.price : null,
           status: "DRAFT",
@@ -88,7 +89,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
       const tour = await fastify.prisma.tour.findFirst({
         where: {
           id: tourId,
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
         },
         include: {
           rooms: { orderBy: { order: "asc" } },
@@ -123,7 +124,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
       const existing = await fastify.prisma.tour.findFirst({
         where: {
           id: tourId,
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
         },
       });
 
@@ -146,16 +147,18 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
         }
       }
 
+      const updateData: Prisma.TourUpdateInput = {};
+      if (body.address !== undefined) updateData.address = body.address;
+      if (body.price !== undefined) updateData.price = body.price;
+      if (body.settingsJson !== undefined) {
+        updateData.settingsJson =
+          body.settingsJson as Prisma.InputJsonValue;
+      }
+      if (body.status !== undefined) updateData.status = body.status;
+
       const updated = await fastify.prisma.tour.update({
         where: { id: tourId },
-        data: {
-          ...(body.address !== undefined && { address: body.address }),
-          ...(body.price !== undefined && { price: body.price }),
-          ...(body.settingsJson !== undefined && {
-            settingsJson: body.settingsJson,
-          }),
-          ...(body.status !== undefined && { status: body.status }),
-        },
+        data: updateData,
         include: {
           rooms: { orderBy: { order: "asc" } },
         },
@@ -182,7 +185,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
       const existing = await fastify.prisma.tour.findFirst({
         where: {
           id: tourId,
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
         },
       });
 
@@ -218,7 +221,7 @@ const toursRoutes: FastifyPluginAsync = async (fastify) => {
       const existing = await fastify.prisma.tour.findFirst({
         where: {
           id: tourId,
-          imobiliariaId: request.user.imobiliariaId,
+          imobiliariaId: request.authUser.imobiliariaId,
         },
         include: {
           rooms: true,
