@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/tour/:path*", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
